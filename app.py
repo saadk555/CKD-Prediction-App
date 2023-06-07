@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route("/", methods=['POST'])
 def hello():
     data = request.get_json()
-
+  
     attributes = [
         'bp', 'bp_limit', 'sg', 'al', 'rbc', 'su', 'pc', 'pcc', 'ba', 'bgr',
         'bu', 'sod', 'sc', 'pot', 'hemo', 'pcv', 'rbcc', 'wbcc', 'htn', 'dm',
@@ -43,4 +43,4 @@ def hello():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
