@@ -34,9 +34,9 @@ def hello():
     stage = data.get('stage')
     affected = data.get('affected')
     age = data.get('age')
-
+     
     return ...
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
