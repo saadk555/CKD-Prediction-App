@@ -1,6 +1,7 @@
 import requests
 url='http://127.0.0.1:5000'
 payload = {
+  "algorithm":"dt",
   "bp": 1,
   "bp_limit": 2,
   "sg": "1.009 - 1.011",
