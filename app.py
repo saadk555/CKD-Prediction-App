@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=['POST'])
 def hello():
+    import models
     data = request.get_json()
     bp = data.get('bp')
     bp_limit = data.get('bp_limit')
@@ -34,6 +35,9 @@ def hello():
     stage = data.get('stage')
     affected = data.get('affected')
     age = data.get('age')
+
+    models.svc()
+
 
     return ...
 
