@@ -5,7 +5,9 @@ app = Flask(__name__)
 
 @app.route("/", methods=['POST'])
 def hello():
+    import models
     data = request.get_json()
+    algo = data.get('algorithm')
     bp = data.get('bp')
     bp_limit = data.get('bp_limit')
     sg = data.get('sg')
@@ -34,8 +36,18 @@ def hello():
     stage = data.get('stage')
     affected = data.get('affected')
     age = data.get('age')
+
+    svc_result = models.svc(bp,bp_limit,sg,al,rbc,su,pc,pcc,ba,bgr,bu,sod,sc,pot,hemo,pcv,rbcc,wbcc,htn,dm,cad,appet,pe,ane,grf,stage,affected,age)
+    rf_result = models.rf(bp,bp_limit,sg,al,rbc,su,pc,pcc,ba,bgr,bu,sod,sc,pot,hemo,pcv,rbcc,wbcc,htn,dm,cad,appet,pe,ane,grf,stage,affected,age)
+    dt_result = models.dt(bp,bp_limit,sg,al,rbc,su,pc,pcc,ba,bgr,bu,sod,sc,pot,hemo,pcv,rbcc,wbcc,htn,dm,cad,appet,pe,ane,grf,stage,affected,age)
      
-    return ...
+    if algo =='svc':
+        return f" {svc_result} "
+    elif algo == 'rf':
+        return f" {rf_result} "
+    elif algo == 'dt':
+        return f" {dt_result} "
+    
 
 
 if __name__ == "__main__":
