@@ -1,8 +1,17 @@
-from flask import Flask, request
+from flask import *
 import re
 import models
+from flask_restful import Resource, Api, reqparse
+import werkzeug
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
+import os
+import requests
+
+UPLOAD_FOLDER = "./UPLOAD_FOLDER"
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route("/", methods=['POST'])
@@ -64,20 +73,45 @@ def hello():
     affected = data.get('affected')
     age = data.get('age')
 
-    svc_result = models.svc(bp, bp_limit, sg, al, rbc, su, pc, pcc, ba, bgr, bu, sod, sc,
-                            pot, hemo, pcv, rbcc, wbcc, htn, dm, cad, appet, pe, ane, grf, stage, affected, age)
-    rf_result = models.rf(bp, bp_limit, sg, al, rbc, su, pc, pcc, ba, bgr, bu, sod, sc,
-                          pot, hemo, pcv, rbcc, wbcc, htn, dm, cad, appet, pe, ane, grf, stage, affected, age)
-    dt_result = models.dt(bp, bp_limit, sg, al, rbc, su, pc, pcc, ba, bgr, bu, sod, sc,
-                          pot, hemo, pcv, rbcc, wbcc, htn, dm, cad, appet, pe, ane, grf, stage, affected, age)
 
     print("=====>")
+
     if algo == 'svc':
+        svc_result = models.svc(bp, bp_limit, sg, al, rbc, su, pc, pcc, ba, bgr, bu, sod, sc,pot, hemo, pcv, rbcc, wbcc, htn, dm, cad, appet, pe, ane, grf, stage, affected, age)
         return f" {svc_result} "
     elif algo == 'rf':
+        rf_result = models.rf(bp, bp_limit, sg, al, rbc, su, pc, pcc, ba, bgr, bu, sod, sc,pot, hemo, pcv, rbcc, wbcc, htn, dm, cad, appet, pe, ane, grf, stage, affected, age)
         return f" {rf_result} "
     elif algo == 'dt':
+        dt_result = models.dt(bp, bp_limit, sg, al, rbc, su, pc, pcc, ba, bgr, bu, sod, sc, pot, hemo, pcv, rbcc, wbcc, htn, dm, cad, appet, pe, ane, grf, stage, affected, age)
         return f" {dt_result} "
+
+@app.route("/image", methods=['POST'])
+def upload_file():
+    from main import mainf
+    global value
+    algo = request.form['algorithm']
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print('success')
+            result = mainf(filename,algo)
+            return result
+
+        
+
+
 
 
 if __name__ == "__main__":
